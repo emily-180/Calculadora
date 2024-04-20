@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private String expressaoNumerica = "";
     private boolean fimDaConta = false;
     private Double resultado = 0.0;
-    private Double soma=0;
+    
     private Button buttonUm, buttonDois, buttonTres, buttonQuatro, buttonCinco,
             buttonSeis, buttonSete, buttonOito, buttonNove, buttonZero;
     private Button buttonVirgula, buttonSoma, buttonSubtracao, buttonIgual, buttonReset,
