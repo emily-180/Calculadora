@@ -128,10 +128,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 fimDaConta = false;
                 expressaoNumerica = textViewUltimaExpressao.getText().toString();
-                if (isUltimoCaractereOperador(expressaoNumerica)) {
-                    buttonDelete.performClick();
+                if (!expressaoNumerica.isEmpty()) {
+                    char ultimoCaractere = expressaoNumerica.charAt(expressaoNumerica.length() - 1);
+                    if (!isOperador(ultimoCaractere)) { //caso seja numero coloca mais
+                        textViewUltimaExpressao.setText(expressaoNumerica + "+");
+                    } else { // caso ja tinha digitado operador, troca para +
+                        textViewUltimaExpressao.setText(expressaoNumerica.substring(0, expressaoNumerica.length() - 1) + "+");
+                    }
                 }
-                textViewUltimaExpressao.setText(resultado != 0.0 ? resultado + "+" : expressaoNumerica + "+");
             }
         });
 
@@ -140,10 +144,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 fimDaConta = false;
                 expressaoNumerica = textViewUltimaExpressao.getText().toString();
-                if (isUltimoCaractereOperador(expressaoNumerica)) {
-                    buttonDelete.performClick();
+                if (expressaoNumerica.isEmpty()) {
+                    textViewUltimaExpressao.setText("-");
+                } else {
+                    char ultimoCaractere = expressaoNumerica.charAt(expressaoNumerica.length() - 1);
+                    if (ultimoCaractere != '-') {
+                        textViewUltimaExpressao.append("-");
+                    }
                 }
-                textViewUltimaExpressao.setText(resultado != 0 ? resultado + "-" : expressaoNumerica + "-");
             }
         });
 
@@ -152,10 +160,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 fimDaConta = false;
                 expressaoNumerica = textViewUltimaExpressao.getText().toString();
-                if (isUltimoCaractereOperador(expressaoNumerica)) {
-                    buttonDelete.performClick();
+                if (!expressaoNumerica.isEmpty()) {
+                    char ultimoCaractere = expressaoNumerica.charAt(expressaoNumerica.length() - 1);
+                    if (!isOperador(ultimoCaractere)) {
+                        textViewUltimaExpressao.setText(expressaoNumerica + "*");
+                    } else {
+                        textViewUltimaExpressao.setText(expressaoNumerica.substring(0, expressaoNumerica.length() - 1) + "*");
+                    }
                 }
-                textViewUltimaExpressao.setText(resultado != 0 ? resultado + "*" : expressaoNumerica + "*");
             }
         });
 
@@ -164,10 +176,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 fimDaConta = false;
                 expressaoNumerica = textViewUltimaExpressao.getText().toString();
-                if (isUltimoCaractereOperador(expressaoNumerica)) {
-                    buttonDelete.performClick();
+                if (!expressaoNumerica.isEmpty()) {
+                    char ultimoCaractere = expressaoNumerica.charAt(expressaoNumerica.length() - 1);
+                    if (!isOperador(ultimoCaractere)) {
+                        textViewUltimaExpressao.setText(expressaoNumerica + "/");
+                    } else {
+                        textViewUltimaExpressao.setText(expressaoNumerica.substring(0, expressaoNumerica.length() - 1) + "/");
+                    }
                 }
-                textViewUltimaExpressao.setText(resultado != 0 ? resultado + "/" : expressaoNumerica + "/");
             }
         });
 
@@ -176,10 +192,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 fimDaConta = false;
                 expressaoNumerica = textViewUltimaExpressao.getText().toString();
-                if (isUltimoCaractereOperador(expressaoNumerica)) {
-                    buttonDelete.performClick();
+                if (!expressaoNumerica.isEmpty()) {
+                    char ultimoCaractere = expressaoNumerica.charAt(expressaoNumerica.length() - 1);
+                    if (!isOperador(ultimoCaractere)) {
+                        textViewUltimaExpressao.setText(expressaoNumerica + "%");
+                    } else {
+                        textViewUltimaExpressao.setText(expressaoNumerica.substring(0, expressaoNumerica.length() - 1) + "%");
+                    }
                 }
-                textViewUltimaExpressao.setText(resultado != 0 ? resultado + "%" : expressaoNumerica + "%");
             }
         });
 
@@ -188,10 +208,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 fimDaConta = false;
                 expressaoNumerica = textViewUltimaExpressao.getText().toString();
-                if(expressaoNumerica.substring(expressaoNumerica.length() - 1).equals(".")){
-                    buttonDelete.performClick();
+                if (!expressaoNumerica.isEmpty() && Character.isDigit(expressaoNumerica.charAt(expressaoNumerica.length() - 1))) {
+                    String[] numeros = expressaoNumerica.split("[+\\-*/]");
+                    String ultimoNumero = numeros[numeros.length - 1];
+                    if (!ultimoNumero.contains(".")) {
+                        textViewUltimaExpressao.append(".");
+                    }
                 }
-                textViewUltimaExpressao.append(".");
             }
         });
 
@@ -204,10 +227,11 @@ public class MainActivity extends AppCompatActivity {
                 textViewUltimaExpressao.setText("");
                 textViewResultado.setText("");
                 resultado = 0.0;
+                textViewResultado.setText("0.0");
             }
         });
 
-        //botao para apagar caracter
+        //botao para apagar  por caracter
         buttonDelete = findViewById(R.id.buttonDeleteID);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,9 +255,13 @@ public class MainActivity extends AppCompatActivity {
                 fimDaConta = true;
                 try {
                     String expressao = textViewUltimaExpressao.getText().toString();
+                    if(isUltimoCaractereOperador(expressao)){
+                        expressao = expressao.substring(0, expressao.length() - 1);
+                        expressaoNumerica = expressao.substring(0, expressao.length() - 1);
+                    }
                     avaliadorExpressao = new ExpressionBuilder(expressao).build();
                     resultado = avaliadorExpressao.calculate();
-                    textViewResultado.setText(resultado.toString());
+                    textViewResultado.setText(String.format("%.8s", resultado.toString()));
                 } catch (Exception e) {
                     Log.e(TAG, getResources().getString(R.string.menssagem_erro) + expressaoNumerica, e);
 
@@ -248,6 +276,8 @@ public class MainActivity extends AppCompatActivity {
         return ultimoCaractere.equals("+") || ultimoCaractere.equals("-") || ultimoCaractere.equals("*") || ultimoCaractere.equals("/") || ultimoCaractere.equals("%");
     }
 
-
+    private boolean isOperador(char caractere) {
+        return caractere == '+' || caractere == '-' || caractere == '*' || caractere == '/';
+    }
 
 }
